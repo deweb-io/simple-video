@@ -2,9 +2,11 @@
 
 # Simple Video Tool
 
+
 Provides Video Blocks for the [Editor.js](https://editorjs.io).
 
 Works only with pasted videos and URLs and requires no server-side uploader.
+
 
 
 ## Installation
@@ -14,31 +16,19 @@ Works only with pasted videos and URLs and requires no server-side uploader.
 Get the package
 
 ```shell
-npm i --save-dev simple-video-editorjs
+npm i --save-dev simple-video-editorjs-bbs
 ```
 
 Include module at your application
 
 ```javascript
-const SimpleVideo = require('simple-video-editorjs');
+const SimpleVideo = require('simple-video-editorjs-bbs');
 ```
 
 ### Download to your project's source dir
 
 1. Upload folder `dist` from repository
 2. Add `dist/bundle.js` file to your page.
-
-### Load from CDN
-
-You can load specific version of package from [jsDelivr CDN](https://www.jsdelivr.com/package/npm/simple-video-editorjs).
-
-`https://cdn.jsdelivr.net/npm/@editorjs/simple-video-editorjs@latest`
-
-Then require this script on page with Editor.js.
-
-```html
-<script src="..."></script>
-```
 
 ## Usage
 
@@ -47,12 +37,12 @@ Add a new Tool to the `tools` property of the Editor.js initial config.
 ```javascript
 var editor = EditorJS({
   ...
-  
+
   tools: {
     ...
     video: SimpleVideo,
   }
-  
+
   ...
 });
 ```
@@ -77,6 +67,8 @@ This Tool has no config params
 | muted          | `boolean` | video will be muted by defaul   |
 | controls       | `boolean` | video should display default controls|
 | stretched      | `boolean` | stretch video to screen's width |
+| width          | `number`  | video width                     |
+| height         | `number`  | video height                    |
 
 
 ```json
@@ -88,7 +80,9 @@ This Tool has no config params
         "autoplay" : false,
         "controls" : false,
         "muted": false,
-        "stretched" : true
+        "stretched" : true,
+        "width" : 1440,
+        "height" : 2960
     }
 }
 ```

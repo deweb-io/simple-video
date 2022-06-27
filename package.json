@@ -1,6 +1,6 @@
 {
-  "name": "simple-video-editorjs",
-  "version": "1.4.9",
+  "name": "@dewebio/simple-video-editorjs-bbs",
+  "version": "1.0.1",
   "keywords": [
     "codex editor",
     "tool",
@@ -9,25 +9,25 @@
     "editor.js",
     "editorjs"
   ],
-  "description": "SimpleVideo Tool for Editor.js",
-  "license": "MIT",
-  "repository": "https://github.com/paulkinlan/simple-video",
+  "description": "fork of SimpleVideo Tool for Editor.js with width & height",
+  "license": "ISC",
+  "repository": "https://github.com/gula2/simple-video.git",
   "main": "./dist/bundle.js",
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development --watch"
   },
   "author": {
-    "name": "Paul Kinlan",
-    "email": "paulkinlan@google.com"
+    "name": "gula",
+    "email": "gula@deweb.io"
   },
   "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/preset-env": "^7.3.4",
-    "babel-loader": "^8.0.5",
-    "css-loader": "^1.0.0",
-    "style-loader": "^0.21.0",
-    "webpack": "^4.29.5",
-    "webpack-cli": "^3.2.3"
-  }
+     "@babel/core": "^7.3.4",
+     "@babel/preset-env": "^7.3.4",
+     "babel-loader": "^8.0.5",
+     "css-loader": "^1.0.0",
+     "style-loader": "^0.21.0",
+     "webpack": "^4.29.5",
+     "webpack-cli": "^3.2.3"
+   }
 }
