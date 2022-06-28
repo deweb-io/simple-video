@@ -6,7 +6,7 @@ require('./index.css').toString();
 /**
  * SimpleVideo Tool for the Editor.js
  * Works only with pasted video URLs and requires no server-side uploader.
- *
+ * This Fork created for Deweb and contains video width & height
  * @typedef {object} SimpleVideoData
  * @description Tool's input and output data format
  * @property {string} url — video URL
@@ -15,6 +15,8 @@ require('./index.css').toString();
  * @property {boolean} controls - video controls enabled
  * @property {boolean} muted - video muted enabled
  * @property {boolean} stretched - should video be stretched to full width of container
+ * @property {number} height - video height
+ * @property {number} width - video width
  */
 class SimpleVideo {
   /**
@@ -30,7 +32,6 @@ class SimpleVideo {
      * Editor.js API
      */
     this.api = api;
-
     /**
      * When block is only constructing,
      * current block points to previous block.
@@ -39,7 +40,6 @@ class SimpleVideo {
      * @type {number}
      */
     this.blockIndex = this.api.blocks.getCurrentBlockIndex() + 1;
-
     /**
      * Styles
      */
@@ -78,6 +78,8 @@ class SimpleVideo {
       controls: data.controls !== undefined ? data.controls : false,
       muted: data.muted !== undefined ? data.muted : false,
       stretched: data.stretched !== undefined ? data.stretched : false,
+      width: data.width !== undefined ? data.width : 0,
+      height: data.height !== undefined ? data.height : 0,
     };
 
     /**
@@ -102,6 +104,7 @@ class SimpleVideo {
         icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.54 5.54L13.77 7.3 12 5.54 10.23 7.3 8.46 5.54 12 2zm2.92 10l-1.76-1.77L18.46 12l-1.76-1.77 1.76-1.77L22 12zm-10 2.92l1.77-1.76L12 18.46l1.77-1.76 1.77 1.76L12 22zm-2.92-10l1.76 1.77L5.54 12l1.76 1.77-1.76 1.77L2 12z"/><circle cx="12" cy="12" r="3"/><path fill="none" d="M0 0h24v24H0z"/></svg>`
       }
     ];
+
   }
 
   /**
@@ -114,7 +117,7 @@ class SimpleVideo {
   render() {
     let wrapper = this._make('div', [this.CSS.baseClass, this.CSS.wrapper]),
         loader = this._make('div', this.CSS.loading),
-        videoHolder = this._make('div', this.CSS.videoHolder),
+        videoHolder = this._make('div', [this.CSS.videoHolder]),
         video = this._make('video'),
         caption = this._make('div', [this.CSS.input, this.CSS.caption], {
           contentEditable: 'true',
@@ -123,6 +126,15 @@ class SimpleVideo {
 
     //caption.dataset.placeholder = 'Enter a caption';
     wrapper.appendChild(loader);
+
+    // Get with & height from metadata
+    video.addEventListener('loadedmetadata', function () {
+        video.dataset.height = this.videoHeight;
+        video.dataset.width = this.videoWidth;
+        // console.log('video.addEventListener: ', this.videoHeight, this.videoWidth, video.dataset.height, video.dataset.width);
+        // video.classList.add(`vidh-${this.videoHeight}`);
+        // veideo.classList.add(`vidw-${this.videoWidth}`);
+    });
 
     if (this.data.url) {
       video.src = this.data.url;
@@ -172,7 +184,9 @@ class SimpleVideo {
       caption: caption.innerHTML,
       controls: video.controls,
       autoplay: video.autoplay,
-      muted: video.muted
+      muted: video.muted,
+      height: video.dataset.height,
+      width: video.dataset.width
     });
   }
 
@@ -189,6 +203,8 @@ class SimpleVideo {
       caption: {
         br: true,
       },
+      height: {},
+      width: {},
     };
   }
 
@@ -258,14 +274,14 @@ class SimpleVideo {
    */
   set data(data) {
     this._data = Object.assign({}, this.data, data);
-
     if (this.nodes.video) {
       this.nodes.video.autoplay = this.data.autoplay;
       this.nodes.video.controls = this.data.controls;
       this.nodes.video.muted = this.data.muted;
       this.nodes.video.src = this.data.url;
+      this.nodes.video.dataset.height = this.data.height;
+      this.nodes.video.dataset.width = this.data.width;
     }
-
     if (this.nodes.caption) {
       this.nodes.caption.innerHTML = this.data.caption;
     }
@@ -312,6 +328,7 @@ class SimpleVideo {
     });
     return wrapper;
   };
+
 
   /**
    * Helper for making Elements with attributes
