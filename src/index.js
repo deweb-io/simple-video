@@ -3,6 +3,8 @@
  */
 require('./index.css').toString();
 
+
+
 /**
  * SimpleVideo Tool for the Editor.js
  * Works only with pasted video URLs and requires no server-side uploader.
@@ -81,7 +83,7 @@ class SimpleVideo {
       width: data.width !== undefined ? data.width : 0,
       height: data.height !== undefined ? data.height : 0,
     };
-
+    
     /**
      * Available Video settings
      */
@@ -123,18 +125,20 @@ class SimpleVideo {
           contentEditable: 'true',
           innerHTML: this.data.caption || ''
         });
-
+      
     //caption.dataset.placeholder = 'Enter a caption';
     wrapper.appendChild(loader);
 
+
+    let elm = this.data;
     // Get with & height from metadata
-    video.addEventListener('loadedmetadata', function () {
-        video.dataset.height = this.videoHeight;
-        video.dataset.width = this.videoWidth;
-        // console.log('video.addEventListener: ', this.videoHeight, this.videoWidth, video.dataset.height, video.dataset.width);
-        // video.classList.add(`vidh-${this.videoHeight}`);
-        // veideo.classList.add(`vidw-${this.videoWidth}`);
-    });
+    if (!elm.width || !elm.height) {
+      video.addEventListener('loadedmetadata', function () {
+          elm.height = this.videoHeight;
+          elm.width = this.videoWidth;
+      });
+    }
+  
 
     if (this.data.url) {
       video.src = this.data.url;
@@ -160,8 +164,7 @@ class SimpleVideo {
     this.nodes.videoHolder = videoHolder;
     this.nodes.wrapper = wrapper;
     this.nodes.video = video;
-    this.nodes.caption = caption;
-
+    this.nodes.caption = caption 
     return wrapper;
   }
 
@@ -179,15 +182,15 @@ class SimpleVideo {
       return this.data;
     }
 
-    return Object.assign(this.data, {
+    let savedData = Object.assign(this.data, {
       url: video.src,
       caption: caption.innerHTML,
       controls: video.controls,
       autoplay: video.autoplay,
-      muted: video.muted,
-      height: video.dataset.height,
-      width: video.dataset.width
+      muted: video.muted
     });
+    
+    return savedData
   }
 
   /**
@@ -216,6 +219,7 @@ class SimpleVideo {
    * @returns {Promise<SimpleVideoData>}
    */
   onDropHandler(file) {
+   
     return new Promise((resolve, reject) => {
       resolve({
         url: URL.createObjectURL(file),
@@ -230,6 +234,7 @@ class SimpleVideo {
    * @param {PasteEvent} event - event with pasted config
    */
   onPaste(event) {
+
     switch (event.type) {
       case 'tag':
         const video = event.detail.data;
