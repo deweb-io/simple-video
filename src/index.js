@@ -146,6 +146,7 @@ class SimpleVideo {
       video.controls = this.data.controls;
       video.autoplay = this.data.autoplay;
       video.muted = this.data.muted;
+      video.poster = this.data.image.url
     }
 
     video.onloadstart = () => {
@@ -188,9 +189,12 @@ class SimpleVideo {
       caption: caption.innerHTML,
       controls: video.controls,
       autoplay: video.autoplay,
-      muted: video.muted
+      muted: video.muted,
+      image: {
+        url: video.poster
+      }
     });
-
+    debugger;
     return savedData
   }
 
@@ -288,6 +292,7 @@ class SimpleVideo {
       this.nodes.video.src = this.data.url;
       this.nodes.video.dataset.height = this.data.height;
       this.nodes.video.dataset.width = this.data.width;
+      this.nodes.video.poster = this.data.image.url;
     }
     if (this.nodes.caption) {
       this.nodes.caption.innerHTML = this.data.caption;

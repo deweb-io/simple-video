@@ -14,8 +14,9 @@
   "repository": "https://github.com/gula2/simple-video.git",
   "main": "./dist/bundle.js",
   "scripts": {
-    "build": "webpack --mode production",
-    "build:dev": "webpack --mode development --watch"
+    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode production",
+    "build:dev": "webpack --mode development --watch",
+    "build:copy": "npm run build && cp -f /Users/or/work/simple-video/dist/bundle.js /Users/or/work/CreatorApp/Frontend/node_modules/@dewebio/simple-video-editorjs-bbs/dist/bundle.js"
   },
   "author": {
     "name": "gula",
