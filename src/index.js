@@ -19,6 +19,7 @@ require('./index.css').toString();
  * @property {boolean} stretched - should video be stretched to full width of container
  * @property {number} height - video height
  * @property {number} width - video width
+ * @property {object} image - thumbnail image
  */
 class SimpleVideo {
   /**
@@ -29,7 +30,7 @@ class SimpleVideo {
    *   config - user config for Tool
    *   api - Editor.js API
    */
-  constructor({data, config, api}) {
+  constructor({ data, config, api }) {
     /**
      * Editor.js API
      */
@@ -82,8 +83,9 @@ class SimpleVideo {
       stretched: data.stretched !== undefined ? data.stretched : false,
       width: data.width !== undefined ? data.width : 0,
       height: data.height !== undefined ? data.height : 0,
+      image: data.image !== undefined ? data.image : { url: '' },
     };
-    
+
     /**
      * Available Video settings
      */
@@ -118,27 +120,26 @@ class SimpleVideo {
    */
   render() {
     let wrapper = this._make('div', [this.CSS.baseClass, this.CSS.wrapper]),
-        loader = this._make('div', this.CSS.loading),
-        videoHolder = this._make('div', [this.CSS.videoHolder]),
-        video = this._make('video'),
-        caption = this._make('div', [this.CSS.input, this.CSS.caption], {
-          contentEditable: 'true',
-          innerHTML: this.data.caption || ''
-        });
-      
+      loader = this._make('div', this.CSS.loading),
+      videoHolder = this._make('div', [this.CSS.videoHolder]),
+      video = this._make('video'),
+      caption = this._make('div', [this.CSS.input, this.CSS.caption], {
+        contentEditable: 'true',
+        innerHTML: this.data.caption || ''
+      });
+
     //caption.dataset.placeholder = 'Enter a caption';
     wrapper.appendChild(loader);
-
 
     let elm = this.data;
     // Get with & height from metadata
     if (!elm.width || !elm.height) {
       video.addEventListener('loadedmetadata', function () {
-          elm.height = this.videoHeight;
-          elm.width = this.videoWidth;
+        elm.height = this.videoHeight;
+        elm.width = this.videoWidth;
       });
     }
-  
+
 
     if (this.data.url) {
       video.src = this.data.url;
@@ -164,7 +165,7 @@ class SimpleVideo {
     this.nodes.videoHolder = videoHolder;
     this.nodes.wrapper = wrapper;
     this.nodes.video = video;
-    this.nodes.caption = caption 
+    this.nodes.caption = caption
     return wrapper;
   }
 
@@ -189,7 +190,7 @@ class SimpleVideo {
       autoplay: video.autoplay,
       muted: video.muted
     });
-    
+
     return savedData
   }
 
@@ -208,6 +209,7 @@ class SimpleVideo {
       },
       height: {},
       width: {},
+      image: {}
     };
   }
 
@@ -219,7 +221,7 @@ class SimpleVideo {
    * @returns {Promise<SimpleVideoData>}
    */
   onDropHandler(file) {
-   
+
     return new Promise((resolve, reject) => {
       resolve({
         url: URL.createObjectURL(file),
@@ -245,7 +247,7 @@ class SimpleVideo {
         break;
 
       case 'pattern':
-        const {data: text} = event.detail;
+        const { data: text } = event.detail;
 
         this.data = {
           url: text,
@@ -253,7 +255,7 @@ class SimpleVideo {
         break;
 
       case 'file':
-        const {file} = event.detail;
+        const { file } = event.detail;
 
         this.onDropHandler(file)
           .then(data => {
@@ -302,9 +304,9 @@ class SimpleVideo {
       patterns: {
         video: /https?:\/\/\S+\.(mp4|webm)$/i
       },
-      tags: [ 'video' ],
+      tags: ['video'],
       files: {
-        mimeTypes: [ 'video/*' ]
+        mimeTypes: ['video/*']
       },
     };
   }
@@ -316,7 +318,7 @@ class SimpleVideo {
   renderSettings() {
     let wrapper = document.createElement('div');
 
-    this.settings.forEach( tune => {
+    this.settings.forEach(tune => {
       let el = document.createElement('div');
 
       el.classList.add(this.CSS.settingsButton);
@@ -346,9 +348,9 @@ class SimpleVideo {
   _make(tagName, classNames = null, attributes = {}) {
     let el = document.createElement(tagName);
 
-    if ( Array.isArray(classNames) ) {
+    if (Array.isArray(classNames)) {
       el.classList.add(...classNames);
-    } else if( classNames ) {
+    } else if (classNames) {
       el.classList.add(classNames);
     }
 
@@ -373,7 +375,7 @@ class SimpleVideo {
    * @private
    */
   _acceptTuneView() {
-    this.settings.forEach( tune => {
+    this.settings.forEach(tune => {
       this.nodes.videoHolder.classList.toggle(this.CSS.videoHolder + '--' + tune.name.replace(/([A-Z])/g, (g) => `-${g[0].toLowerCase()}`), !!this.data[tune.name]);
 
       if (tune.name === 'stretched') {
